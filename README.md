@@ -4,7 +4,7 @@ Repositório do trabalho da disciplina de PIC 1 do curso de Engenharia de Comput
 ## Sumário
 * [Sumário](#sumario)
 * [Resumo](#resumo)
-* [Descrição](#descricao)
+* [Descrição](#descriçao)
 * [Componentes e materiais](#componentes-e-materiais)
 * [Alunos](#alunos)
 
