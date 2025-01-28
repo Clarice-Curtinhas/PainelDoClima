@@ -34,7 +34,7 @@ A ideia é criar algo similar ao projeto "Respiramos", instalada na Praça Adolp
 * Suporte para a bateria
 * Jumpers
 
-## Reesultado
+## Resultado
 Video mostrando o resultado: [resultado]()
 
 ## Alunos
