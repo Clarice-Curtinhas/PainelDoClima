@@ -39,5 +39,5 @@ Video mostrando o resultado: [resultado]()
 
 ## Alunos
 * Ana Luisa Casotti
-* Clarice Curtinhas
+* Clarice Curtinhas Santos
 * Mateus Lizardo
