@@ -12,7 +12,7 @@
 #define PIN9 12  // Pino de dados da fita 9
 #define PIN10 13 // Pino de dados da fita 10
 
-#define NUMPIXELS 20 // Número de LEDs no strip
+#define NUMPIXELS 30 // Número de LEDs no strip
 
 #define TEMPIDEAL 24.5
 #define UMIDADEIDEAL 0.40
@@ -85,6 +85,10 @@ void setup(){
     strip8.show();
     strip9.show();
     strip10.show();
+
+    // Inicializa botão e indica qual função ele irá chamar
+    pinMode(2, INPUT_PULLUP);
+    attachInterrupt(0, stuffHapenned, RISING);
 }
 
 void loop(){
@@ -94,10 +98,6 @@ void loop(){
     waveOffset++;
 
     tempAtual = 24.5;
-
-    /*tempAtual = Serial.read();
-    umidadeAtual = Serial.read();
-    qualidadeAtual = Serial.read();*/
 
     porcentagem = opcaoSelecionada();
 
@@ -161,6 +161,12 @@ void loop(){
     delay(50); // Aguarda 1 segundo
 }
 
+/**
+ * @brief função que define qual a porcentagem de LEDs deve ser ligado de acordo com a opção que é exibida
+ * PRECISA DE AJUSTES
+ * 
+ * @return int 
+ */
 int opcaoSelecionada(){
     int porcentagem;
 
@@ -177,7 +183,7 @@ int opcaoSelecionada(){
     else if (opcao == UMIDADE){
         backgroundColor[0] = 0;
 
-        porcentagem = (umidadeAtual * UMIDADEIDEAL);
+        porcentagem = ((umidadeAtual * 100)/ UMIDADEIDEAL);
     }
 
     else if (opcao == QUALIDADE){
@@ -203,6 +209,12 @@ int opcaoSelecionada(){
     return porcentagem;
 }
 
+/**
+ * @brief função para definir a cor de cada led na matriz de fitas criado, sendo i qual o índice do LED em determinada fita e porcentagem para definir se ela deve ligar ou não
+ * 
+ * @param i 
+ * @param porcentagem 
+ */
 void defineCor(int i, int porcentagem){
 
     if (analisePorcent == MENOR && (porcentagem / 10) <= fita){
@@ -262,4 +274,14 @@ void defineCor(int i, int porcentagem){
     }
 
     fita++;
+}
+
+/**
+ * @brief função chamada quando o botão é apertado para mudar as informações exibidas no painel
+ * 
+ */
+void stuffHapenned(){
+  if(opcao == TEMPERATURA) opcao = UMIDADE;
+  else if(opcao == UMIDADE) opcao = QUALIDADE;
+  else if(opcao == QUALIDADE) opcao = TEMPERATURA;
 }
