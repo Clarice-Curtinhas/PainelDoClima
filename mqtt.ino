@@ -105,7 +105,7 @@ void loop() {
 
 tDados leDados(tDados d, String message){
   int i=0;
-  char *temp;
+  char temp[5];
  while(message[i]!=','){
   temp[i] = message[i];
   i++;
