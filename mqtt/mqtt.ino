@@ -5,8 +5,8 @@ typedef struct {
   float temp, umidade, qualidade;
 } tDados;
 
-const char* ssid = "PIC2-2.4G";
-const char* password = "engcomp@ufes";
+const char* ssid = "iPhone";
+const char* password = "aninha123";
 //Free mqtt server for testing
 const char* mqtt_server = "broker.mqtt-dashboard.com";
 //Local MQTT server - Tested using mosquitto mqtt for windows and linux
@@ -60,32 +60,57 @@ void reconnect() {
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
+      Serial.println(" try again in 1 second");
       // Wait 5 seconds before retrying
-      delay(5000);
+      delay(1000);
     }
   }
 }
 
 tDados leDados(tDados d, char* message){
   int i=0;
-  char temp[5], umidade, qualidade;
+  char temp[5], umidade[5], qualidade[5];
  
  while(message[i]!=','){
   if(message[i]==','){
+    temp[i] = '\0';
     break;
   }
   temp[i] = message[i];
+  
   i++;
  }
-  Serial.print("string");
- Serial.println(temp);
+ 
+  i++;
+  int j=0;
+ while(message[i]!=','){
+  if(message[i]==','){
+    umidade[j] = '\0';
+    break;
+  }
+  umidade[j] = message[i];
+  i++;
+  j++;
+ }
 
- //d.temp = temp.toFloat();
- snprintf(temp, i, "%lf", d.temp);
- d.umidade = 0;
- d.qualidade = 0;
+  i++;
+  int k=0;
+ while(message[i]!='\0'){
+  if(message[i]=='\0'){
+    qualidade[k] = '\0';
+    break;
+  }
+  qualidade[k] = message[i];
+  i++;
+  k++;
+ }
 
+ d.temp = atof(temp);
+ Serial.println(d.temp);
+ d.umidade = atof(umidade);
+ Serial.println(d.umidade);
+ d.qualidade = atof(qualidade);
+ Serial.println(d.qualidade);
  return d;
 }
 
