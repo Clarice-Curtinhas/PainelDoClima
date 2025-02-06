@@ -67,22 +67,45 @@ void reconnect() {
   }
 }
 
+tDados leDados(tDados d, char* message){
+  int i=0;
+  char temp[5], umidade, qualidade;
+ 
+ while(message[i]!=','){
+  if(message[i]==','){
+    break;
+  }
+  temp[i] = message[i];
+  i++;
+ }
+  Serial.print("string");
+ Serial.println(temp);
+
+ //d.temp = temp.toFloat();
+ snprintf(temp, i, "%lf", d.temp);
+ d.umidade = 0;
+ d.qualidade = 0;
+
+ return d;
+}
+
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Mensagem recebida no tópico: ");
   Serial.println(topic);
 
   // Converte os dados recebidos para String
-  String message = "";
+  char message[100] = "";
 
   tDados d;
   for (int i = 0; i < length; i++) {
-    message += (char)payload[i];
+    message[i] += (char)payload[i];
   }
 
-  leDados(d, message);
+  d = leDados(d, message);
 
   Serial.print("Mensagem: ");
   Serial.println(message);
+  //Serial.println(d.temp);
 }
 
 void setup() {
@@ -101,14 +124,3 @@ void loop() {
 
   
   }
-}
-
-tDados leDados(tDados d, String message){
-  int i=0;
-  char temp[5];
- while(message[i]!=','){
-  temp[i] = message[i];
-  i++;
- }
- snprintf(temp, i, "%lf", d.temp);
-}
