@@ -1,22 +1,32 @@
 #include <Adafruit_NeoPixel.h>
 #include <time.h>
 
+// Fitas com os dados da UFES
 #define PIN1 4   // Pino de dados da fita 1
 #define PIN2 5   // Pino de dados da fita 2
 #define PIN3 6   // Pino de dados da fita 3
+
+// Fitas com os dados do local 1
 #define PIN4 7   // Pino de dados da fita 4
 #define PIN5 8   // Pino de dados da fita 5
 #define PIN6 9   // Pino de dados da fita 6
+
+// Fitas com os dados do local 2
 #define PIN7 10  // Pino de dados da fita 7
 #define PIN8 11  // Pino de dados da fita 8
 #define PIN9 12  // Pino de dados da fita 9
+
+//Fita gradiente de cores (referência)
 #define PIN10 13 // Pino de dados da fita 10
 
 #define NUMPIXELS 30 // Número de LEDs no strip
 
-#define TEMPIDEAL 24.5
-#define UMIDADEIDEAL 0.40
-#define QUALIDADEIDEAL 1000
+#define TEMPMIN_VIX 15
+#define TEMPMAX_VIX 40
+#define UMDMIN 0
+#define UMDMAX 100
+#define QLDMIN_VIX definir
+#define QLDMAX_VIX definir
 
 #define MENOR -1
 #define MAIOR 1
@@ -25,8 +35,6 @@
 #define TEMPERATURA 't'
 #define UMIDADE 'u'
 #define QUALIDADE 'q'
-
-#define NUMANIMACAO 5
 
 Adafruit_NeoPixel strip1 = Adafruit_NeoPixel(NUMPIXELS, PIN1, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
 Adafruit_NeoPixel strip2 = Adafruit_NeoPixel(NUMPIXELS, PIN2, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
@@ -45,19 +53,11 @@ int analisePorcent = MENOR;
 
 int fita = 1;
 
-float tempAtual;
-float umidadeAtual;
-float qualidadeAtual;
+float tempAtual; //Receber do mqtt
+float umidadeAtual; //Receber do mqtt
+float qualidadeAtual; //Receber do mqtt
 
 char opcao = TEMPERATURA;
-
-// Variáveis para a animação de onda
-int waveOffset = 0;      // Deslocamento da onda
-int waveAmplitude = 128; // Amplitude da onda
-int waveSpeed = 20;      // Velocidade da onda
-float frequencia = 0.1;  // Frequência da onda
-
-int randomStrip, pixels = NUMANIMACAO + 5;
 
 void setup(){
     Serial.begin(9600);
@@ -76,7 +76,7 @@ void setup(){
 
     // Garante que todos os LEDs começam apagados
     strip1.show();
-    strip2.show();
+    strip2.show();#define NUMANIMACAO 5
     strip3.show();
     strip4.show();
     strip5.show();
@@ -93,51 +93,40 @@ void setup(){
 
 void loop(){
     int i;
-    int porcentagem;
-
-    waveOffset++;
-
+    // Valores fictícios para teste
     tempAtual = 24.5;
-
-    porcentagem = opcaoSelecionada();
-
-    if (pixels == (NUMPIXELS + NUMANIMACAO) && analisePorcent == IGUAL){
-        // Seed the random number generator with the current time
-        srand(time(NULL));
-        // Generate a random number between 1 and 10
-        randomStrip = rand() % 10 + 1;
-        pixels = 0;
-    }
+    umidadeAtual = 75;
+    qualidadeAtual = 68.7;
 
     for (int i = 0; i < NUMPIXELS; i++){
-        defineCor(i, porcentagem);
+        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
         strip1.setPixelColor(i, strip1.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, porcentagem);
+        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
         strip2.setPixelColor(i, strip2.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, porcentagem);
+        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
         strip3.setPixelColor(i, strip3.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, porcentagem);
+        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
         strip4.setPixelColor(i, strip4.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, porcentagem);
+        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
         strip5.setPixelColor(i, strip5.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, porcentagem);
+        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
         strip6.setPixelColor(i, strip6.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, porcentagem);
+        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
         strip7.setPixelColor(i, strip7.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, porcentagem);
+        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
         strip8.setPixelColor(i, strip8.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, porcentagem);
+        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
         strip9.setPixelColor(i, strip9.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, porcentagem);
+        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
         strip10.setPixelColor(i, strip10.Color(cor[0], cor[1], cor[2]));
 
         fita = 1;
@@ -154,122 +143,56 @@ void loop(){
     strip9.show();
     strip10.show();
 
-    if (analisePorcent == IGUAL){
-        pixels++;
-    }
-
     delay(50); // Aguarda 1 segundo
 }
 
 /**
- * @brief função que define qual a porcentagem de LEDs deve ser ligado de acordo com a opção que é exibida
- * PRECISA DE AJUSTES
- * 
- * @return int 
- */
-int opcaoSelecionada(){
-    int porcentagem;
-
-    backgroundColor[0] = 255;
-    backgroundColor[1] = 255;
-    backgroundColor[2] = 255;
-
-    if (opcao == TEMPERATURA){
-        backgroundColor[1] = 0;
-
-        porcentagem = ((tempAtual * 100) / TEMPIDEAL);
-    }
-
-    else if (opcao == UMIDADE){
-        backgroundColor[0] = 0;
-
-        porcentagem = ((umidadeAtual * 100)/ UMIDADEIDEAL);
-    }
-
-    else if (opcao == QUALIDADE){
-        backgroundColor[2] = 0;
-
-        porcentagem = ((qualidadeAtual * 100) / QUALIDADEIDEAL);
-    }
-
-    if (porcentagem < 100)
-        analisePorcent = MENOR;
-
-    else if (porcentagem > 100)
-        analisePorcent = MAIOR;
-
-    else{
-        cor[0] = backgroundColor[0];
-        cor[1] = backgroundColor[1];
-        cor[2] = backgroundColor[2];
-
-        analisePorcent = IGUAL;
-    }
-
-    return porcentagem;
-}
-
-/**
- * @brief função para definir a cor de cada led na matriz de fitas criado, sendo i qual o índice do LED em determinada fita e porcentagem para definir se ela deve ligar ou não
+ * @brief função para definir a cor de cada led na matriz de fitas criado, sendo i qual o índice do LED em determinada fita e tempAtual, umidadeAtual, qualidadeAtual para definir se ela deve ligar ou não
  * 
  * @param i 
- * @param porcentagem 
+ * @param tempAtual
+ * @param umidadeAtual 
+ * @param qualidadeAtual 
  */
-void defineCor(int i, int porcentagem){
+void defineCor(int i, float tempAtual, float umidadeAtual, float qualidadeAtual){
 
-    if (analisePorcent == MENOR && (porcentagem / 10) <= fita){
+    if (fita == 10){
         if (opcao == TEMPERATURA){
-            cor[0] = sin((i + waveOffset + (fita / 20)) * frequencia) * 127;
-            cor[1] = sin((i + waveOffset + 50 + (fita / 20)) * frequencia) * 127 + waveAmplitude;
-            cor[2] = 255;
+            cor[0] = map(i, 0, 19, 0, 255);
+            cor[1] = 0;
+            cor[2] = map(i, 0, 19, 255, 0);
         }
 
         else if (opcao == UMIDADE){
-            cor[0] = sin((i + waveOffset + (fita / 20)) * frequencia) * 127 + waveAmplitude;
-            cor[1] = 255;
-            cor[2] = sin((i + waveOffset + 100 + (fita / 20)) * frequencia) * 127 + waveAmplitude;
+            cor[0] = 0;
+            cor[1] = map(i, 0, 19, 0, 255);
+            cor[2] = map(i, 0, 19, 255, 0);
         }
 
         else if (opcao == QUALIDADE){
-            cor[0] = 255;
-            cor[1] = sin((i + waveOffset + 50 + (fita / 20)) * frequencia) * 127 + waveAmplitude;
-            cor[2] = sin((i + waveOffset + 100 + (fita / 20)) * frequencia) * 127 + waveAmplitude;
+            cor[0] = map(i, 0, 19, 0, 255);
+            cor[1] = map(i, 0, 19, 255, 0);
+            cor[2] = 0;
         }
     }
 
-    else if (analisePorcent == MAIOR && (porcentagem / 10) >= fita){
+    else {
         if (opcao == TEMPERATURA){
-            cor[0] = 255;
-            cor[1] = sin((i + waveOffset + 50 + (fita / 20)) * frequencia) * 127 + waveAmplitude;
-            cor[2] = sin((i + waveOffset + 100 + (fita / 20)) * frequencia) * 127 + waveAmplitude;
+            cor[0] = map(tempAtual, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
+            cor[1] = 0;
+            cor[2] = map(tempAtual, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
         }
 
         else if (opcao == UMIDADE){
-            cor[0] = sin((i + waveOffset + (fita / 20)) * frequencia) * 127 + waveAmplitude;
-            cor[1] = sin((i + waveOffset + 50 + (fita / 20)) * frequencia) * 127 + waveAmplitude;
-            cor[2] = 255;
+            cor[0] = 0;
+            cor[1] = map(umidadeAtual, UMDMIN, UMDMAX, 0, 255);
+            cor[2] = map(umidadeAtual, UMDMIN, UMDMAX, 255, 0);
         }
 
         else if (opcao == QUALIDADE){
-            cor[0] = sin((i + waveOffset + (fita / 20)) * frequencia) * 127 + waveAmplitude;
-            cor[1] = 255;
-            cor[2] = sin((i + waveOffset + 100 + (fita / 20)) * frequencia) * 127 + waveAmplitude;
-        }
-    }
-
-    else{
-        if (randomStrip == fita && (i >= pixels && i <= (pixels + 5))){
-            cor[0] = 255;
-            cor[1] = 255;
-            cor[2] = 255;
-
-            Serial.println(i);
-        }
-
-        else{
-            cor[0] = backgroundColor[0];
-            cor[1] = backgroundColor[1];
-            cor[2] = backgroundColor[2];
+            cor[0] = map(qualidadeAtual, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
+            cor[1] = map(qualidadeAtual, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
+            cor[2] = 0;
         }
     }
 
