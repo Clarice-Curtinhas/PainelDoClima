@@ -7,13 +7,13 @@
 #define PIN1 4   // Pino de dados da fita 1
 #define PIN2 5   // Pino de dados da fita 2
 #define PIN3 6   // Pino de dados da fita 3
-
-// Fitas com os dados do local 1
 #define PIN4 7   // Pino de dados da fita 4
-#define PIN5 8   // Pino de dados da fita 5
-#define PIN6 9   // Pino de dados da fita 6
 
-// Fitas com os dados do local 2
+//Divisória das fitas
+#define PIN5 8   // Pino de dados da fita 5
+
+// Fitas com os dados de Vitória
+#define PIN6 9   // Pino de dados da fita 6
 #define PIN7 10  // Pino de dados da fita 7
 #define PIN8 11  // Pino de dados da fita 8
 #define PIN9 12  // Pino de dados da fita 9
@@ -55,6 +55,7 @@ int analisePorcent = MENOR;
 
 int fita = 1;
 
+// apagar, caso o codigo dê certo
 float tempAtual; //Receber do mqtt
 float umidadeAtual; //Receber do mqtt
 float qualidadeAtual; //Receber do mqtt
@@ -65,6 +66,10 @@ char opcao = TEMPERATURA;
 typedef struct {
   float temp, umidade, qualidade;
 } tDados;
+
+tDados dadosUfes, dadosVix;
+float *dadoAtual = &dadosUfes.temp;
+float *dadoExt = &dadosVix.temp;
 
 const char* ssid = "PIC2-2.4G";
 const char* password = "engcomp@ufes";
@@ -114,12 +119,17 @@ void setup(){
 
     // Inicializa botão e indica qual função ele irá chamar
     pinMode(2, INPUT_PULLUP);
-    attachInterrupt(0, stuffHapenned, RISING);
+    pinMode(3, INPUT_PULLUP);
+    pinMode(21, INPUT_PULLUP);
+    attachInterrupt(0, selecionaTemp, RISING);
+    attachInterrupt(1, selecionaUmidade, RISING);
+    attachInterrupt(2, selecionaQualidade, RISING);
 }
 
 void loop(){
     int i;
     // Valores fictícios para teste
+    // apagar, caso o codigo dê certo
     tempAtual = 24.5;
     umidadeAtual = 75;
     qualidadeAtual = 68.7;
@@ -131,34 +141,34 @@ void loop(){
     client.loop();
 
     for (int i = 0; i < NUMPIXELS; i++){
-        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
+        defineCor(i, dadoAtual, dadoExt);
         strip1.setPixelColor(i, strip1.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
+        defineCor(i, dadoAtual, dadoExt);
         strip2.setPixelColor(i, strip2.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
+        defineCor(i, dadoAtual, dadoExt);
         strip3.setPixelColor(i, strip3.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
+        defineCor(i, dadoAtual, dadoExt);
         strip4.setPixelColor(i, strip4.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
+        defineCor(i, dadoAtual, dadoExt);
         strip5.setPixelColor(i, strip5.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
+        defineCor(i, dadoAtual, dadoExt);
         strip6.setPixelColor(i, strip6.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
+        defineCor(i, dadoAtual, dadoExt);
         strip7.setPixelColor(i, strip7.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
+        defineCor(i, dadoAtual, dadoExt);
         strip8.setPixelColor(i, strip8.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
+        defineCor(i, dadoAtual, dadoExt);
         strip9.setPixelColor(i, strip9.Color(cor[0], cor[1], cor[2]));
 
-        defineCor(i, tempAtual, umidadeAtual, qualidadeAtual);
+        defineCor(i, dadoAtual, dadoExt);
         strip10.setPixelColor(i, strip10.Color(cor[0], cor[1], cor[2]));
 
         fita = 1;
@@ -179,14 +189,13 @@ void loop(){
 }
 
 /**
- * @brief função para definir a cor de cada led na matriz de fitas criado, sendo i qual o índice do LED em determinada fita e tempAtual, umidadeAtual, qualidadeAtual para definir se ela deve ligar ou não
+ * @brief função para definir a cor de cada led na matriz de fitas criado
  * 
- * @param i 
- * @param tempAtual
- * @param umidadeAtual 
- * @param qualidadeAtual 
+ * @param i o índice do LED em determinada fita
+ * @param dadoAtual aponta para o dado da ufes selecionado pelo botão
+ * @param dadoExt aponta para o dado de Vitória selecionado pelo botão
  */
-void defineCor(int i, float tempAtual, float umidadeAtual, float qualidadeAtual){
+void defineCor(int i, float *dadoAtual, float *dadoExt){
 
     if (fita == 10){
         if (opcao == TEMPERATURA){
@@ -208,24 +217,46 @@ void defineCor(int i, float tempAtual, float umidadeAtual, float qualidadeAtual)
         }
     }
 
-    else {
+    else if(fita <= 4) {
         if (opcao == TEMPERATURA){
-            cor[0] = map(tempAtual, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
+            cor[0] = map(&dadoAtual, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
             cor[1] = 0;
-            cor[2] = map(tempAtual, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
+            cor[2] = map(&dadoAtual, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
         }
 
         else if (opcao == UMIDADE){
             cor[0] = 0;
-            cor[1] = map(umidadeAtual, UMDMIN, UMDMAX, 0, 255);
-            cor[2] = map(umidadeAtual, UMDMIN, UMDMAX, 255, 0);
+            cor[1] = map(&dadoAtual, UMDMIN, UMDMAX, 0, 255);
+            cor[2] = map(&dadoAtual, UMDMIN, UMDMAX, 255, 0);
         }
 
         else if (opcao == QUALIDADE){
-            cor[0] = map(qualidadeAtual, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
-            cor[1] = map(qualidadeAtual, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
+            cor[0] = map(&dadoAtual, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
+            cor[1] = map(&dadoAtual, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
             cor[2] = 0;
         }
+    } else if(fita >= 6 && fita < 10){
+            if (opcao == TEMPERATURA){
+            cor[0] = map(&dadoExt, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
+            cor[1] = 0;
+            cor[2] = map(&dadoExt, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
+        }
+
+        else if (opcao == UMIDADE){
+            cor[0] = 0;
+            cor[1] = map(&dadoExt, UMDMIN, UMDMAX, 0, 255);
+            cor[2] = map(&dadoExt, UMDMIN, UMDMAX, 255, 0);
+        }
+
+        else if (opcao == QUALIDADE){
+            cor[0] = map(&dadoExt, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
+            cor[1] = map(&dadoExt, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
+            cor[2] = 0;
+        }
+    } else if(fita == 5){
+            cor[0] = 255;
+            cor[1] = 255;
+            cor[2] = 255;
     }
 
     fita++;
@@ -330,11 +361,11 @@ tDados leDados(tDados d, char* message){
  }
 
  d.temp = atof(temp);
- //Serial.println(d.temp);
+
  d.umidade = atof(umidade);
- //Serial.println(d.umidade);
+
  d.qualidade = atof(qualidade);
- //Serial.println(d.qualidade);
+
  return d;
 }
 
@@ -345,7 +376,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   // Converte os dados recebidos para String
   char message[100] = "";
 
-  tDados dadosUfes, dadosVix;
+
   for (int i = 0; i < length; i++) {
     message[i] += (char)payload[i];
   }
@@ -373,4 +404,23 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Mensagem: ");
   Serial.println(message);
   
+}
+
+//comentar
+void selecionaTemp(){
+  opcao = TEMPERATURA;
+  dadoAtual = &dadosUfes.temp;
+  dadoExt = &dadosVix.temp;
+}
+
+void selecionaUmidade(){
+  opcao = UMIDADE;
+  dadoAtual = &dadosUfes.umidade;
+  dadoExt = &dadosVix.umidade;
+}
+
+void selecionaQualidade(){
+  opcao = QUALIDADE;
+  dadoAtual = &dadosUfes.qualidade;
+  dadoExt = &dadosVix.qualidade;
 }
