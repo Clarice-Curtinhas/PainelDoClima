@@ -5,8 +5,8 @@ typedef struct {
   float temp, umidade, qualidade;
 } tDados;
 
-const char* ssid = "iPhone";
-const char* password = "aninha123";
+const char* ssid = "Galaxy A20s3459";
+const char* password = "jrhp4729";
 //Free mqtt server for testing
 const char* mqtt_server = "broker.mqtt-dashboard.com";
 //Local MQTT server - Tested using mosquitto mqtt for windows and linux
@@ -54,9 +54,10 @@ void reconnect() {
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
       // Once connected, publish an announcement...
-      client.publish("projeto", "hello world");
+      client.publish("PainelDoClima", "hello world");
       // ... and resubscribe
-      client.subscribe("projeto/teste");
+      client.subscribe("PainelDoClima/InfoUfes");
+      client.subscribe("PainelDoClima/InfoVix");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -106,11 +107,11 @@ tDados leDados(tDados d, char* message){
  }
 
  d.temp = atof(temp);
- Serial.println(d.temp);
+ //Serial.println(d.temp);
  d.umidade = atof(umidade);
- Serial.println(d.umidade);
+ //Serial.println(d.umidade);
  d.qualidade = atof(qualidade);
- Serial.println(d.qualidade);
+ //Serial.println(d.qualidade);
  return d;
 }
 
@@ -121,16 +122,34 @@ void callback(char* topic, byte* payload, unsigned int length) {
   // Converte os dados recebidos para String
   char message[100] = "";
 
-  tDados d;
+  tDados dadosUfes, dadosVix;
   for (int i = 0; i < length; i++) {
     message[i] += (char)payload[i];
   }
 
-  d = leDados(d, message);
+  if (strcmp(topic, "PainelDoClima/InfoUfes") == 0) {
+    dadosUfes = leDados(dadosUfes, message);
+    Serial.print("Dados Ufes - Temp: ");
+    Serial.println(dadosUfes.temp);
+    Serial.print("Umidade: ");
+    Serial.println(dadosUfes.umidade);
+    Serial.print("Qualidade: ");
+    Serial.println(dadosUfes.qualidade);
+  } else if (strcmp(topic, "PainelDoClima/InfoVix") == 0) {
+    dadosVix = leDados(dadosVix, message);
+    Serial.print("Dados Vix - Temp: ");
+    Serial.println(dadosVix.temp);
+    Serial.print("Umidade: ");
+    Serial.println(dadosVix.umidade);
+    Serial.print("Qualidade: ");
+    Serial.println(dadosVix.qualidade);
+  } else {
+    Serial.println("Tópico desconhecido");
+  }
 
   Serial.print("Mensagem: ");
   Serial.println(message);
-  //Serial.println(d.temp);
+  
 }
 
 void setup() {
