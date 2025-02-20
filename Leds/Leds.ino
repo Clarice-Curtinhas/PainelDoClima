@@ -36,16 +36,16 @@
 #define UMIDADE 'u'
 #define QUALIDADE 'q'
 
-/*Adafruit_NeoPixel strip1 = Adafruit_NeoPixel(NUMPIXELS, PIN1, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
-Adafruit_NeoPixel strip2 = Adafruit_NeoPixel(NUMPIXELS, PIN2, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
+Adafruit_NeoPixel strip1 = Adafruit_NeoPixel(NUMPIXELS, PIN1, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
+/*Adafruit_NeoPixel strip2 = Adafruit_NeoPixel(NUMPIXELS, PIN2, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
 Adafruit_NeoPixel strip3 = Adafruit_NeoPixel(NUMPIXELS, PIN3, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
 Adafruit_NeoPixel strip4 = Adafruit_NeoPixel(NUMPIXELS, PIN4, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
 Adafruit_NeoPixel strip5 = Adafruit_NeoPixel(NUMPIXELS, PIN5, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
 Adafruit_NeoPixel strip6 = Adafruit_NeoPixel(NUMPIXELS, PIN6, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
 Adafruit_NeoPixel strip7 = Adafruit_NeoPixel(NUMPIXELS, PIN7, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
 Adafruit_NeoPixel strip8 = Adafruit_NeoPixel(NUMPIXELS, PIN8, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
-Adafruit_NeoPixel strip9 = Adafruit_NeoPixel(NUMPIXELS, PIN9, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel*/
-Adafruit_NeoPixel strip10 = Adafruit_NeoPixel(NUMPIXELS, PIN10, NEO_GRB + NEO_KHZ800); // Cria um objeto da biblioteca NeoPixel
+Adafruit_NeoPixel strip9 = Adafruit_NeoPixel(NUMPIXELS, PIN9, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
+Adafruit_NeoPixel strip10 = Adafruit_NeoPixel(NUMPIXELS, PIN10, NEO_GRB + NEO_KHZ800); // Cria um objeto da biblioteca NeoPixel*/
 
 int cor[3];
 int backgroundColor[3];
@@ -58,7 +58,7 @@ float tempAtual; //Receber do mqtt
 float umidadeAtual; //Receber do mqtt
 float qualidadeAtual; //Receber do mqtt
 
-char opcao = TEMPERATURA;
+char opcao = QUALIDADE;
 
 //Variáveis MQTT
 typedef struct {
@@ -66,35 +66,37 @@ typedef struct {
 } tDados;
 
 tDados dadosUfes, dadosVix;
-float *dadoAtual = &dadosUfes.temp;
-float *dadoExt = &dadosVix.temp;
+
+float dadoAtual;
+float dadoExt;
+
 
 void setup(){
     Serial.begin(9600);
 
     // Inicializa o NeoPixel
-    /*strip1.begin();
-    strip2.begin();
+    strip1.begin();
+    /*strip2.begin();
     strip3.begin();
     strip4.begin();
     strip5.begin();
     strip6.begin();
     strip7.begin();
     strip8.begin();
-    strip9.begin();*/
-    strip10.begin();
+    strip9.begin();
+    strip10.begin();*/
 
     // Garante que todos os LEDs começam apagados
-    /*strip1.show();
-    strip2.show();
+    strip1.show();
+    /*strip2.show();
     strip3.show();
     strip4.show();
     strip5.show();
     strip6.show();
     strip7.show();
     strip8.show();
-    strip9.show();*/
-    strip10.show();
+    strip9.show();
+    strip10.show();*/
 
     // Inicializa botão e indica qual função ele irá chamar
     /*pinMode(2, INPUT_PULLUP);
@@ -106,17 +108,20 @@ void setup(){
 }
 
 void loop(){
+    dadosUfes.qualidade = 17.0;
+    dadosVix.qualidade = 20.0;
     int i;
+
+    selecionaTemp();
+    selecionaUmidade();
+    selecionaQualidade();
     // Valores fictícios para teste
     // apagar, caso o codigo dê certo
-    tempAtual = 24.5;
-    umidadeAtual = 75;
-    qualidadeAtual = 68.7;
-
+    
     for (int i = 0; i < NUMPIXELS; i++){
-        /*defineCor(i, dadoAtual, dadoExt);
+        defineCor(i, dadoAtual, dadoExt);
         strip1.setPixelColor(i, strip1.Color(cor[0], cor[1], cor[2]));
-
+/*
         defineCor(i, dadoAtual, dadoExt);
         strip2.setPixelColor(i, strip2.Color(cor[0], cor[1], cor[2]));
 
@@ -139,26 +144,25 @@ void loop(){
         strip8.setPixelColor(i, strip8.Color(cor[0], cor[1], cor[2]));
 
         defineCor(i, dadoAtual, dadoExt);
-        strip9.setPixelColor(i, strip9.Color(cor[0], cor[1], cor[2]));*/
+        strip9.setPixelColor(i, strip9.Color(cor[0], cor[1], cor[2]));
 
         defineCor(i, dadoAtual, dadoExt);
-        cor[0] = 255; cor[1] = 0; cor[2] = 0;
-        strip10.setPixelColor(i, strip10.Color(cor[0], cor[1], cor[2]));
+        strip10.setPixelColor(i, strip10.Color(cor[0], cor[1], cor[2]));*/
 
         fita = 1;
     }
 
-    /*strip1.show();
-    strip2.show();
+    strip1.show();
+    /*strip2.show();
     strip3.show();
     strip4.show();
     strip5.show();
     strip6.show();
     strip7.show();
     strip8.show();
-    strip9.show();*/
-    strip10.show();
-
+    strip9.show();
+    strip10.show();*/
+    
     delay(50); // Aguarda 1 segundo
 }
 
@@ -169,65 +173,68 @@ void loop(){
  * @param dadoAtual aponta para o dado da ufes selecionado pelo botão
  * @param dadoExt aponta para o dado de Vitória selecionado pelo botão
  */
-void defineCor(int i, float *dadoAtual, float *dadoExt){
+void defineCor(int i, float dadoAtual, float dadoExt){
 
     if (fita == 10){
         if (opcao == TEMPERATURA){
-            cor[0] = map(i, 0, 19, 0, 255);
+            cor[0] = map(i, 0, 29, 0, 255);
             cor[1] = 0;
-            cor[2] = map(i, 0, 19, 255, 0);
+            cor[2] = map(i, 0, 29, 255, 0);
         }
 
         else if (opcao == UMIDADE){
             cor[0] = 0;
-            cor[1] = map(i, 0, 19, 0, 255);
-            cor[2] = map(i, 0, 19, 255, 0);
+            cor[1] = map(i, 0, 29, 0, 255);
+            cor[2] = map(i, 0, 29, 255, 0);
         }
 
         else if (opcao == QUALIDADE){
-            cor[0] = map(i, 0, 19, 0, 255);
-            cor[1] = map(i, 0, 19, 255, 0);
+            cor[0] = map(i, 0, 29, 0, 255);
+            cor[1] = map(i, 0, 29, 255, 0);
             cor[2] = 0;
+            
         }
     }
 
     else if(fita <= 4) {
         if (opcao == TEMPERATURA){
-            cor[0] = map(*dadoAtual, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
+            cor[0] = map(dadoAtual, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
             cor[1] = 0;
-            cor[2] = map(*dadoAtual, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
+            cor[2] = map(dadoAtual, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
         }
 
         else if (opcao == UMIDADE){
             cor[0] = 0;
-            cor[1] = map(*dadoAtual, UMDMIN, UMDMAX, 0, 255);
-            cor[2] = map(*dadoAtual, UMDMIN, UMDMAX, 255, 0);
+            cor[1] = map(dadoAtual, UMDMIN, UMDMAX, 0, 255);
+            cor[2] = map(dadoAtual, UMDMIN, UMDMAX, 255, 0);
         }
 
         else if (opcao == QUALIDADE){
-            cor[0] = map(*dadoAtual, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
-            cor[1] = map(*dadoAtual, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
+            cor[0] = map(dadoAtual, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
+            cor[1] = map(dadoAtual, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
             cor[2] = 0;
         }
-    } else if(fita >= 6 && fita < 10){
+    } 
+    else if(fita >= 6 && fita < 10){
             if (opcao == TEMPERATURA){
-            cor[0] = map(*dadoExt, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
+            cor[0] = map(dadoExt, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
             cor[1] = 0;
-            cor[2] = map(*dadoExt, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
+            cor[2] = map(dadoExt, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
         }
 
         else if (opcao == UMIDADE){
             cor[0] = 0;
-            cor[1] = map(*dadoExt, UMDMIN, UMDMAX, 0, 255);
-            cor[2] = map(*dadoExt, UMDMIN, UMDMAX, 255, 0);
+            cor[1] = map(dadoExt, UMDMIN, UMDMAX, 0, 255);
+            cor[2] = map(dadoExt, UMDMIN, UMDMAX, 255, 0);
         }
 
         else if (opcao == QUALIDADE){
-            cor[0] = map(*dadoExt, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
-            cor[1] = map(*dadoExt, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
+            cor[0] = map(dadoExt, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
+            cor[1] = map(dadoExt, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
             cor[2] = 0;
         }
-    } else if(fita == 5){
+    } 
+    else if(fita == 5){
             cor[0] = 255;
             cor[1] = 255;
             cor[2] = 255;
@@ -249,18 +256,18 @@ void stuffHapenned(){
 //comentar
 void selecionaTemp(){
   opcao = TEMPERATURA;
-  dadoAtual = &dadosUfes.temp;
-  dadoExt = &dadosVix.temp;
+  dadoAtual = dadosUfes.temp;
+  dadoExt = dadosVix.temp;
 }
 
 void selecionaUmidade(){
   opcao = UMIDADE;
-  dadoAtual = &dadosUfes.umidade;
-  dadoExt = &dadosVix.umidade;
+  dadoAtual = dadosUfes.umidade;
+  dadoExt = dadosVix.umidade;
 }
 
 void selecionaQualidade(){
   opcao = QUALIDADE;
-  dadoAtual = &dadosUfes.qualidade;
-  dadoExt = &dadosVix.qualidade;
+  dadoAtual = dadosUfes.qualidade;
+  dadoExt = dadosVix.qualidade;
 }
