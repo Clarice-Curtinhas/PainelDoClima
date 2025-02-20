@@ -25,8 +25,8 @@
 #define TEMPMAX_VIX 40
 #define UMDMIN 0
 #define UMDMAX 100
-#define QLDMIN_VIX 1
-#define QLDMAX_VIX 1
+#define QLDMIN_VIX 0
+#define QLDMAX_VIX 100
 
 #define MENOR -1
 #define MAIOR 1
