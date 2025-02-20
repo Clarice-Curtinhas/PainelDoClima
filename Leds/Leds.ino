@@ -48,8 +48,8 @@ void loop(){
     int i;
 
     selecionaTemp();
-    /*selecionaUmidade();
-    selecionaQualidade();*/
+    selecionaUmidade();
+    selecionaQualidade();
     
     for (int i = 0; i < NUMPIXELS; i++){
         defineCor(i, dadoAtual, dadoExt);
