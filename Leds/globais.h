@@ -33,5 +33,5 @@ typedef struct {
 
 tDados dadosUfes, dadosVix;
 
-float dadoAtual;
-float dadoExt;
+float dadoAtual = 25.0;
+float dadoExt = 25.0;

@@ -38,18 +38,25 @@ void setup(){
 }
 
 void loop(){
-  // dados fictícios para teste
-    dadosUfes.qualidade = 17.0;
-    dadosUfes.temp = 20.0;
-    dadosUfes.umidade = 87.0;
-    dadosVix.qualidade = 80.0;
-    dadosVix.temp = 35.0;
-    dadosVix.umidade = 30.0;
-    int i;
+    if(Serial.available()){
+        String local = Serial.readStringUntil('\n');
+        String temp = Serial.readStringUntil('\n');
+        String umidade = Serial.readStringUntil('\n');
+        String qualidade = Serial.readStringUntil('\n');
 
-    selecionaTemp();
-    /*selecionaUmidade();
-    selecionaQualidade();*/
+        if(local.equals("Dados Ufes")){
+            dadosUfes.temp = temp.toFloat();
+            dadosUfes.umidade = umidade.toFloat();
+            dadosUfes.qualidade = qualidade.toFloat();
+        }
+        else if(local.equals("Dados Vix")){
+            dadosVix.temp = temp.toFloat();
+            dadosVix.umidade = umidade.toFloat();
+            dadosVix.qualidade = qualidade.toFloat();
+        }
+    }
+    atualizaDados();
+    int i;
     
     for (int i = 0; i < NUMPIXELS; i++){
         defineCor(i, dadoAtual, dadoExt);
@@ -176,16 +183,6 @@ void defineCor(int i, float dadoAtual, float dadoExt){
     fita++;
 }
 
-/**
- * @brief função chamada quando o botão é apertado para mudar as informações exibidas no painel
- * 
- */
-void stuffHapenned(){
-  if(opcao == TEMPERATURA) opcao = UMIDADE;
-  else if(opcao == UMIDADE) opcao = QUALIDADE;
-  else if(opcao == QUALIDADE) opcao = TEMPERATURA;
-}
-
 //comentar
 void selecionaTemp(){
   opcao = TEMPERATURA;
@@ -203,4 +200,19 @@ void selecionaQualidade(){
   opcao = QUALIDADE;
   dadoAtual = dadosUfes.qualidade;
   dadoExt = dadosVix.qualidade;
+}
+
+void atualizaDados(){
+    if (opcao == TEMPERATURA){
+        dadoAtual = dadosUfes.temp;
+        dadoExt = dadosVix.temp;
+    }
+    else if (opcao == UMIDADE){
+        dadoAtual = dadosUfes.umidade;
+        dadoExt = dadosVix.umidade;
+    }
+    else if (opcao == QUALIDADE){
+        dadoAtual = dadosUfes.qualidade;
+        dadoExt = dadosVix.qualidade;
+    }
 }

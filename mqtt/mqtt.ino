@@ -129,19 +129,15 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   if (strcmp(topic, "PainelDoClima/InfoUfes") == 0) {
     dadosUfes = leDados(dadosUfes, message);
-    Serial.print("Dados Ufes - Temp: ");
+    Serial.println("Dados Ufes");
     Serial.println(dadosUfes.temp);
-    Serial.print("Umidade: ");
     Serial.println(dadosUfes.umidade);
-    Serial.print("Qualidade: ");
     Serial.println(dadosUfes.qualidade);
   } else if (strcmp(topic, "PainelDoClima/InfoVix") == 0) {
     dadosVix = leDados(dadosVix, message);
-    Serial.print("Dados Vix - Temp: ");
+    Serial.println("Dados Vix");
     Serial.println(dadosVix.temp);
-    Serial.print("Umidade: ");
     Serial.println(dadosVix.umidade);
-    Serial.print("Qualidade: ");
     Serial.println(dadosVix.qualidade);
   } else {
     Serial.println("Tópico desconhecido");
