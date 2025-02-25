@@ -32,9 +32,9 @@ void setup(){
     pinMode(2, INPUT_PULLUP);
     pinMode(3, INPUT_PULLUP);
     pinMode(21, INPUT_PULLUP);
-    attachInterrupt(0, selecionaTemp, RISING);
-    attachInterrupt(1, selecionaUmidade, RISING);
-    attachInterrupt(2, selecionaQualidade, RISING);
+    attachInterrupt(0, selecionaTemp, FALLING);
+    attachInterrupt(1, selecionaUmidade, FALLING);
+    attachInterrupt(2, selecionaQualidade, FALLING);
 }
 
 void loop(){
@@ -43,19 +43,32 @@ void loop(){
         String temp = Serial.readStringUntil('\n');
         String umidade = Serial.readStringUntil('\n');
         String qualidade = Serial.readStringUntil('\n');
+        Serial.println(local[6]);
+        
 
-        if(local.equals("Dados Ufes")){
+        if(local[6] == 'U'){
+            Serial.print("teste");
             dadosUfes.temp = temp.toFloat();
             dadosUfes.umidade = umidade.toFloat();
             dadosUfes.qualidade = qualidade.toFloat();
+            Serial.println(dadosUfes.temp);
+            Serial.println(dadosUfes.umidade);
+            Serial.println(dadosUfes.qualidade);
         }
-        else if(local.equals("Dados Vix")){
+        else if(local[6] == 'V'){
             dadosVix.temp = temp.toFloat();
             dadosVix.umidade = umidade.toFloat();
             dadosVix.qualidade = qualidade.toFloat();
         }
     }
+    /*dadosUfes.temp = 25.0;
+    dadosUfes.umidade = 50.0;
+    dadosUfes.qualidade = 80.0;
+    dadosVix.temp = 30.0;
+    dadosVix.umidade = 80.0;
+    dadosVix.qualidade = 50.0;*/
     atualizaDados();
+    
     int i;
     
     for (int i = 0; i < NUMPIXELS; i++){
@@ -188,18 +201,21 @@ void selecionaTemp(){
   opcao = TEMPERATURA;
   dadoAtual = dadosUfes.temp;
   dadoExt = dadosVix.temp;
+  Serial.println(opcao);
 }
 
 void selecionaUmidade(){
   opcao = UMIDADE;
   dadoAtual = dadosUfes.umidade;
   dadoExt = dadosVix.umidade;
+  Serial.println(opcao);
 }
 
 void selecionaQualidade(){
   opcao = QUALIDADE;
   dadoAtual = dadosUfes.qualidade;
   dadoExt = dadosVix.qualidade;
+  Serial.println(opcao);
 }
 
 void atualizaDados(){

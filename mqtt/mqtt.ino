@@ -61,7 +61,7 @@ void reconnect() {
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
-      Serial.println(" try again in 10 seconds");
+      Serial.println(" try again in 1 seconds");
       // Wait 5 seconds before retrying
       delay(1000);
     }
@@ -116,8 +116,8 @@ tDados leDados(tDados d, char* message){
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Mensagem recebida no tópico: ");
-  Serial.println(topic);
+  //Serial.print("Mensagem recebida no tópico: ");
+  //Serial.println(topic);
 
   // Converte os dados recebidos para String
   char message[100] = "";
@@ -143,8 +143,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println("Tópico desconhecido");
   }
 
-  Serial.print("Mensagem: ");
-  Serial.println(message);
+  //Serial.print("Mensagem: ");
+  //Serial.println(message);
   
 }
 
