@@ -27,11 +27,10 @@ A ideia é criar algo similar ao projeto "Respiramos", instalada na Praça Adolp
 ## Componentes e Materiais
 * Arduino Mega
 * Fita de Led de 5 metros
-* ESP
-* Botão
-* Protoboard
-* Bateria de 5 volts
-* Suporte para a bateria
+* ESP8266
+* 3 Botões
+* Placa de circuito impresso
+* 2 Protoboards
 * Jumpers
 
 ## Resultado
