@@ -31,7 +31,7 @@ typedef struct {
   float temp, umidade, qualidade;
 } tDados;
 
-tDados dadosUfes, dadosVix, dadosLugar2;
+tDados dadosUfes, dadosSPaulo, dadosBrasilia;
 
 float dadoAtual = 25.0;
 float dadoExt = 15.0;

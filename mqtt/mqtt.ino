@@ -8,7 +8,7 @@ typedef struct {
 const char* ssid = "Galaxy A20s3459";
 const char* password = "jrhp4729";
 //Free mqtt server for testing
-const char* mqtt_server = "broker.mqtt-dashboard.com";
+const char* mqtt_server = "test.mosquitto.org";
 //Local MQTT server - Tested using mosquitto mqtt for windows and linux
 //const char* mqtt_server = "192.168.137.1";
 
@@ -54,10 +54,11 @@ void reconnect() {
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
       // Once connected, publish an announcement...
-      client.publish("PainelDoClima", "hello world");
+      client.publish("pic1UFES/arbotec", "hello world");
       // ... and resubscribe
-      client.subscribe("PainelDoClima/InfoUfes");
-      client.subscribe("PainelDoClima/InfoVix");
+      client.subscribe("pic1UFES/arbotec/InfoUfes");
+      client.subscribe("pic1UFES/arbotec/InfoSPaulo");
+      client.subscribe("pic1UFES/arbotec/InfoBrasilia")
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -107,11 +108,8 @@ tDados leDados(tDados d, char* message){
  }
 
  d.temp = atof(temp);
- //Serial.println(d.temp);
  d.umidade = atof(umidade);
- //Serial.println(d.umidade);
  d.qualidade = atof(qualidade);
- //Serial.println(d.qualidade);
  return d;
 }
 
@@ -122,29 +120,33 @@ void callback(char* topic, byte* payload, unsigned int length) {
   // Converte os dados recebidos para String
   char message[100] = "";
 
-  tDados dadosUfes, dadosVix;
+  tDados dadosUfes, dadosSPaulo, dadosBrasilia;
   for (int i = 0; i < length; i++) {
     message[i] += (char)payload[i];
   }
 
-  if (strcmp(topic, "PainelDoClima/InfoUfes") == 0) {
+  if (strcmp(topic, "pic1UFES/arbotec/InfoUfes") == 0) {
     dadosUfes = leDados(dadosUfes, message);
     Serial.println("Dados Ufes");
     Serial.println(dadosUfes.temp);
     Serial.println(dadosUfes.umidade);
     Serial.println(dadosUfes.qualidade);
-  } else if (strcmp(topic, "PainelDoClima/InfoVix") == 0) {
-    dadosVix = leDados(dadosVix, message);
-    Serial.println("Dados Vix");
-    Serial.println(dadosVix.temp);
-    Serial.println(dadosVix.umidade);
-    Serial.println(dadosVix.qualidade);
-  } else {
+  } else if (strcmp(topic, "pic1UFES/arbotec/InfoSPaulo") == 0) {
+    dadosSPaulo = leDados(dadosSPaulo, message);
+    Serial.println("Dados Sao Paulo");
+    Serial.println(dadosSPaulo.temp);
+    Serial.println(dadosSPaulo.umidade);
+    Serial.println(dadosSPaulo.qualidade);
+  } else if (strcmp(topic, "pic1UFES/arbotec/InfoBrasilia") == 0) {
+    dadosBrasilia = leDados(dadosBrasilia, message);
+    Serial.println("Dados Brasilia");
+    Serial.println(dadosBrasilia.temp);
+    Serial.println(dadosBrasilia.umidade);
+    Serial.println(dadosBrasilia.qualidade);
+  }
+   else {
     Serial.println("Tópico desconhecido");
   }
-
-  //Serial.print("Mensagem: ");
-  //Serial.println(message);
   
 }
 

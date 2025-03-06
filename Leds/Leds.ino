@@ -55,22 +55,26 @@ void loop(){
                 Serial.println(dadosUfes.umidade);
                 Serial.println(dadosUfes.qualidade);
             }
-            else if(local[6] == 'V'){
-                dadosVix.temp = temp.toFloat();
-                dadosVix.umidade = umidade.toFloat();
-                dadosVix.qualidade = qualidade.toFloat();
+            else if(local[6] == 'S'){
+                dadosSPaulo.temp = temp.toFloat();
+                dadosSPaulo.umidade = umidade.toFloat();
+                dadosSPaulo.qualidade = qualidade.toFloat();
+          } else if(local[6] == 'B'){
+                dadosBrasilia.temp = temp.toFloat();
+                dadosBrasilia.umidade = umidade.toFloat();
+                dadosBrasilia.qualidade = qualidade.toFloat();
           }
         }
     }
     /*dadosUfes.temp = 25.0;
     dadosUfes.umidade = 50.0;
     dadosUfes.qualidade = 80.0;
-    dadosVix.temp = 15.0;
-    dadosVix.umidade = 0.0;
-    dadosVix.qualidade = 0.0;
-    dadosLugar2.temp = 40.0;
-    dadosLugar2.qualidade = 100.0;
-    dadosLugar2.umidade = 100.0;*/
+    dadosSPaulo.temp = 15.0;
+    dadosSPaulo.umidade = 0.0;
+    dadosSPaulo.qualidade = 0.0;
+    dadosBrasilia.temp = 40.0;
+    dadosBrasilia.qualidade = 100.0;
+    dadosBrasilia.umidade = 100.0;*/
     atualizaDados();
     
     int i;
@@ -218,38 +222,38 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2){
 void selecionaTemp(){
   opcao = TEMPERATURA;
   dadoAtual = dadosUfes.temp;
-  dadoExt = dadosVix.temp;
-  dadoExt2 = dadosLugar2.temp;
+  dadoExt = dadosSPaulo.temp;
+  dadoExt2 = dadosBrasilia.temp;
 }
 
 void selecionaUmidade(){
   opcao = UMIDADE;
   dadoAtual = dadosUfes.umidade;
-  dadoExt = dadosVix.umidade;
-  dadoExt2 = dadosLugar2.temp;
+  dadoExt = dadosSPaulo.umidade;
+  dadoExt2 = dadosBrasilia.temp;
 }
 
 void selecionaQualidade(){
   opcao = QUALIDADE;
   dadoAtual = dadosUfes.qualidade;
-  dadoExt = dadosVix.qualidade;
-  dadoExt2 = dadosLugar2.temp;
+  dadoExt = dadosSPaulo.qualidade;
+  dadoExt2 = dadosBrasilia.temp;
 }
 
 void atualizaDados(){
     if (opcao == TEMPERATURA){
         dadoAtual = dadosUfes.temp;
-        dadoExt = dadosVix.temp;
-        dadoExt2 = dadosLugar2.temp;
+        dadoExt = dadosSPaulo.temp;
+        dadoExt2 = dadosBrasilia.temp;
     }
     else if (opcao == UMIDADE){
         dadoAtual = dadosUfes.umidade;
-        dadoExt = dadosVix.umidade;
-        dadoExt2 = dadosLugar2.umidade;
+        dadoExt = dadosSPaulo.umidade;
+        dadoExt2 = dadosBrasilia.umidade;
     }
     else if (opcao == QUALIDADE){
         dadoAtual = dadosUfes.qualidade;
-        dadoExt = dadosVix.qualidade;
-        dadoExt2 = dadosLugar2.qualidade;
+        dadoExt = dadosSPaulo.qualidade;
+        dadoExt2 = dadosBrasilia.qualidade;
     }
 }
