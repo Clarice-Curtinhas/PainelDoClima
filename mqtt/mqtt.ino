@@ -58,7 +58,7 @@ void reconnect() {
       // ... and resubscribe
       client.subscribe("pic1UFES/arbotec/InfoUfes");
       client.subscribe("pic1UFES/arbotec/InfoSPaulo");
-      client.subscribe("pic1UFES/arbotec/InfoBrasilia")
+      client.subscribe("pic1UFES/arbotec/InfoBrasilia");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
