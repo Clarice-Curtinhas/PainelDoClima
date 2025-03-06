@@ -138,9 +138,56 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2){
 
     if (fita == 10){
         if (opcao == TEMPERATURA){
-            cor[0] = map(i, 0, 29, 0, 255);
-            cor[1] = 0;
-            cor[2] = map(i, 0, 29, 255, 0);
+            int troca = -1;
+
+            /*if (i <= 5){
+                cor[0] = 0;
+                cor[1] = 0;
+                cor[2] = 255; // Azul escuro
+            }
+
+            else if (i >= 6 && i <= 11){
+                cor[0] = 0;
+                cor[1] = 191;
+                cor[2] = 255; // Azul claro
+            }
+
+            else if (i >= 12 && i <= 17){
+                cor[0] = 255;
+                cor[1] = 255;
+                cor[2] = 0; // Amarelo
+            }
+
+            else if (i >= 18 && i <= 23){
+                cor[0] = 255;
+                cor[1] = 165;
+                cor[2] = 0; // Laranja
+            }
+
+            else if (i >= 24 && i <= 29){
+                cor[0] = 255;
+                cor[1] = 0;
+                cor[2] = 0; // Vermelho
+            }*/
+
+           if (i < 6){
+            cor[0] = 0;
+            cor[1] = map(i, 0, 11, 0, 50);
+            cor[2] = 255;
+           }
+
+            if (i > 6){
+                cor[0] = 255;
+                cor[1] = map(i, 11, 29, 191, 0);
+                cor[2] = 0;
+            }
+
+            if(i == 6){
+                cor[0] = 255;
+                cor[1] = 255;
+                cor[2] = 0; // Amarelo
+                troca = 1;
+            }
         }
 
         else if (opcao == UMIDADE){
@@ -171,8 +218,8 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2){
         }
 
         else if (opcao == QUALIDADE){
-            cor[0] = map(dadoAtual, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
-            cor[1] = map(dadoAtual, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
+            cor[0] = map(dadoAtual, QLDMIN, QLDMAX, 0, 255);
+            cor[1] = map(dadoAtual, QLDMIN, QLDMAX, 255, 0);
             cor[2] = 0;
         }
     } 
@@ -190,8 +237,8 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2){
         }
 
         else if (opcao == QUALIDADE){
-            cor[0] = map(dadoExt, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
-            cor[1] = map(dadoExt, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
+            cor[0] = map(dadoExt, QLDMIN, QLDMAX, 0, 255);
+            cor[1] = map(dadoExt, QLDMIN, QLDMAX, 255, 0);
             cor[2] = 0;
         }
     } 
@@ -209,8 +256,8 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2){
         }
 
         else if (opcao == QUALIDADE){
-            cor[0] = map(dadoExt2, QLDMIN_VIX, QLDMAX_VIX, 0, 255);
-            cor[1] = map(dadoExt2, QLDMIN_VIX, QLDMAX_VIX, 255, 0);
+            cor[0] = map(dadoExt2, QLDMIN, QLDMAX, 0, 255);
+            cor[1] = map(dadoExt2, QLDMIN, QLDMAX, 255, 0);
             cor[2] = 0;
         }
     }
