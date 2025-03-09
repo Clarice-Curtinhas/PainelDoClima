@@ -1,7 +1,8 @@
-#include "constantes.h"                                                                                                                                                                         
+#include "constantes.h"
 #include "globais.h"
 
-void setup(){
+void setup()
+{
     Serial.begin(9600);
 
     // Inicializa o NeoPixel
@@ -15,6 +16,8 @@ void setup(){
     strip8.begin();
     strip9.begin();
     strip10.begin();
+    strip11.begin();
+    strip12.begin();
 
     // Garante que todos os LEDs começam apagados
     strip1.show();
@@ -27,6 +30,8 @@ void setup(){
     strip8.show();
     strip9.show();
     strip10.show();
+    strip11.show();
+    strip12.show();
 
     // Inicializa botão e indica qual função ele irá chamar
     pinMode(2, INPUT_PULLUP);
@@ -37,16 +42,20 @@ void setup(){
     attachInterrupt(2, selecionaQualidade, FALLING);
 }
 
-void loop(){
-    if(Serial.available()){
+void loop()
+{
+    if (Serial.available())
+    {
         String local = Serial.readStringUntil('\n');
-          if(local[0]=='D'){
+        if (local[0] == 'D')
+        {
             String temp = Serial.readStringUntil('\n');
             String umidade = Serial.readStringUntil('\n');
             String qualidade = Serial.readStringUntil('\n');
             Serial.println(local[6]);
-            
-            if(local[6] == 'U'){
+
+            if (local[6] == 'U')
+            {
                 Serial.print("teste");
                 dadosUfes.temp = temp.toFloat();
                 dadosUfes.umidade = umidade.toFloat();
@@ -55,15 +64,18 @@ void loop(){
                 Serial.println(dadosUfes.umidade);
                 Serial.println(dadosUfes.qualidade);
             }
-            else if(local[6] == 'S'){
+            else if (local[6] == 'S')
+            {
                 dadosSPaulo.temp = temp.toFloat();
                 dadosSPaulo.umidade = umidade.toFloat();
                 dadosSPaulo.qualidade = qualidade.toFloat();
-          } else if(local[6] == 'B'){
+            }
+            else if (local[6] == 'B')
+            {
                 dadosBrasilia.temp = temp.toFloat();
                 dadosBrasilia.umidade = umidade.toFloat();
                 dadosBrasilia.qualidade = qualidade.toFloat();
-          }
+            }
         }
     }
     /*dadosUfes.temp = 25.0;
@@ -76,10 +88,11 @@ void loop(){
     dadosBrasilia.qualidade = 100.0;
     dadosBrasilia.umidade = 100.0;*/
     atualizaDados();
-    
+
     int i;
-    
-    for (int i = 0; i < NUMPIXELS; i++){
+
+    for (int i = 0; i < NUMPIXELS; i++)
+    {
         defineCor(i, dadoAtual, dadoExt, dadoExt2);
         strip1.setPixelColor(i, strip1.Color(cor[0], cor[1], cor[2]));
 
@@ -110,6 +123,12 @@ void loop(){
         defineCor(i, dadoAtual, dadoExt, dadoExt2);
         strip10.setPixelColor(i, strip10.Color(cor[0], cor[1], cor[2]));
 
+        defineCor(i, dadoAtual, dadoExt, dadoExt2);
+        strip11.setPixelColor(i, strip11.Color(cor[0], cor[1], cor[2]));
+
+        defineCor(i, dadoAtual, dadoExt, dadoExt2);
+        strip12.setPixelColor(i, strip12.Color(cor[0], cor[1], cor[2]));
+
         fita = 1;
     }
 
@@ -123,139 +142,117 @@ void loop(){
     strip8.show();
     strip9.show();
     strip10.show();
-    
+    strip11.show();
+    strip12.show();
+
     delay(50); // Aguarda 1 segundo
 }
 
 /**
  * @brief função para definir a cor de cada led na matriz de fitas criado
- * 
+ *
  * @param i o índice do LED em determinada fita
  * @param dadoAtual aponta para o dado da ufes selecionado pelo botão
  * @param dadoExt aponta para o dado de Vitória selecionado pelo botão
  */
-void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2){
+void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2)
+{
 
-    if (fita == 10){
-        if (opcao == TEMPERATURA){
-            int troca = -1;
+    if (fita >= 10){
+        if (fita == 10){
+            corTemperatura(i, 5);
+        }
 
-            /*if (i <= 5){
-                cor[0] = 0;
-                cor[1] = 0;
-                cor[2] = 255; // Azul escuro
+        else if (fita == 11){
+            //corUmidade(i, 6);
+            if (i < 6){
+                cor[0] = 0;                   // Sem vermelho
+                cor[1] = map(i, 0, 5, 0, 50); // Verde suave até 50
+                cor[2] = 255;                 // Azul completo
             }
 
-            else if (i >= 6 && i <= 11){
-                cor[0] = 0;
-                cor[1] = 191;
-                cor[2] = 255; // Azul claro
-            }
-
-            else if (i >= 12 && i <= 17){
-                cor[0] = 255;
-                cor[1] = 255;
-                cor[2] = 0; // Amarelo
-            }
-
-            else if (i >= 18 && i <= 23){
-                cor[0] = 255;
-                cor[1] = 165;
-                cor[2] = 0; // Laranja
-            }
-
-            else if (i >= 24 && i <= 29){
-                cor[0] = 255;
-                cor[1] = 0;
-                cor[2] = 0; // Vermelho
-            }*/
-
-           if (i < 6){
-            cor[0] = 0;
-            cor[1] = map(i, 0, 11, 0, 50);
-            cor[2] = 255;
-           }
-
+            // Para i > 6 (LEDs após o 7º: transição de vermelho para amarelo)
             if (i > 6){
-                cor[0] = 255;
-                cor[1] = map(i, 11, 29, 191, 0);
-                cor[2] = 0;
+                cor[0] = 255;                   // Vermelho completo
+                cor[1] = map(i, 7, 11, 191, 0); // Verde vai diminuindo
+                cor[2] = 0;                     // Sem azul
             }
 
-            if(i == 6){
-                cor[0] = 255;
-                cor[1] = 255;
-                cor[2] = 0; // Amarelo
-                troca = 1;
+            // Para i == 6 (LED 7: Amarelo)
+            if (i == 6){
+                cor[0] = 255; // Vermelho completo
+                cor[1] = 255; // Verde completo
+                cor[2] = 0;   // Sem azul (amarelo)
             }
         }
 
-        else if (opcao == UMIDADE){
-            cor[0] = 0;
-            cor[1] = map(i, 0, 29, 0, 255);
-            cor[2] = map(i, 0, 29, 255, 0);
-        }
-
-        else if (opcao == QUALIDADE){
-            cor[0] = map(i, 0, 29, 0, 255);
-            cor[1] = map(i, 0, 29, 255, 0);
+        else if (fita == 12){
+            // corQualidade(i);
+            cor[0] = map(i, 0, 5, 255, 0); // vermelho
+            cor[1] = map(i, 0, 5, 0, 255); // verde
             cor[2] = 0;
-            
         }
     }
 
-    else if(fita < 4) {
+    else if (fita < 4){
         if (opcao == TEMPERATURA){
-            cor[0] = map(dadoAtual, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
-            cor[1] = 0;
-            cor[2] = map(dadoAtual, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
+            corTemperatura(dadoAtual, 30);
         }
 
         else if (opcao == UMIDADE){
+            //corUmidade(dadoAtual, 60);
             cor[0] = 0;
             cor[1] = map(dadoAtual, UMDMIN, UMDMAX, 0, 255);
             cor[2] = map(dadoAtual, UMDMIN, UMDMAX, 255, 0);
         }
 
         else if (opcao == QUALIDADE){
+            // corQualidade(dadoAtual);
             cor[0] = map(dadoAtual, QLDMIN, QLDMAX, 0, 255);
             cor[1] = map(dadoAtual, QLDMIN, QLDMAX, 255, 0);
             cor[2] = 0;
         }
-    } 
-    else if(fita >= 4 && fita < 7){
-            if (opcao == TEMPERATURA){
+    }
+
+    else if (fita >= 4 && fita < 7){
+        if (opcao == TEMPERATURA){
+            //corTemperatura(dadoExt, 30);
             cor[0] = map(dadoExt, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
             cor[1] = 0;
             cor[2] = map(dadoExt, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
         }
 
         else if (opcao == UMIDADE){
+            //corUmidade(dadoExt, 60);
             cor[0] = 0;
             cor[1] = map(dadoExt, UMDMIN, UMDMAX, 0, 255);
             cor[2] = map(dadoExt, UMDMIN, UMDMAX, 255, 0);
         }
 
         else if (opcao == QUALIDADE){
+            // corQualidade(dadoExt);
             cor[0] = map(dadoExt, QLDMIN, QLDMAX, 0, 255);
             cor[1] = map(dadoExt, QLDMIN, QLDMAX, 255, 0);
             cor[2] = 0;
         }
-    } 
-    else if(fita >= 7 && fita < 10){
-            if (opcao == TEMPERATURA){
+    }
+    else if (fita >= 7 && fita < 10){
+        if (opcao == TEMPERATURA){
+            //corTemperatura(dadoExt2, 30);
             cor[0] = map(dadoExt2, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
             cor[1] = 0;
             cor[2] = map(dadoExt2, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
         }
 
         else if (opcao == UMIDADE){
+            //corUmidade(dadoExt2, 60);
             cor[0] = 0;
             cor[1] = map(dadoExt2, UMDMIN, UMDMAX, 0, 255);
             cor[2] = map(dadoExt2, UMDMIN, UMDMAX, 255, 0);
         }
 
         else if (opcao == QUALIDADE){
+            // corQualidade(dadoExt2);
             cor[0] = map(dadoExt2, QLDMIN, QLDMAX, 0, 255);
             cor[1] = map(dadoExt2, QLDMIN, QLDMAX, 255, 0);
             cor[2] = 0;
@@ -265,40 +262,94 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2){
     fita++;
 }
 
-//comentar
-void selecionaTemp(){
-  opcao = TEMPERATURA;
-  dadoAtual = dadosUfes.temp;
-  dadoExt = dadosSPaulo.temp;
-  dadoExt2 = dadosBrasilia.temp;
+
+void corTemperatura(int i, int valorDeCorte){
+    if (i < valorDeCorte){
+        cor[0] = 0;
+        cor[1] = map(i, 0, 11, 0, 50);
+        cor[2] = 255;
+    }
+
+    else if (i > valorDeCorte){
+        cor[0] = 255;
+        cor[1] = map(i, 11, 29, 191, 0);
+        cor[2] = 0;
+    }
+
+    else if (i == valorDeCorte){
+        cor[0] = 255;
+        cor[1] = 255;
+        cor[2] = 0; // Amarelo
+    }
 }
 
-void selecionaUmidade(){
-  opcao = UMIDADE;
-  dadoAtual = dadosUfes.umidade;
-  dadoExt = dadosSPaulo.umidade;
-  dadoExt2 = dadosBrasilia.temp;
+void corUmidade(int i, int valorDeCorte){
+    if (i < valorDeCorte){
+        cor[0] = 0;                   // Sem vermelho
+        cor[1] = map(i, 0, 5, 0, 50); // Verde suave até 50
+        cor[2] = 255;                 // Azul completo
+    }
+
+    else if (i > valorDeCorte){
+        cor[0] = 255;                   // Vermelho completo
+        cor[1] = map(i, 7, 11, 191, 0); // Verde vai diminuindo
+        cor[2] = 0;                     // Sem azul
+    }
+
+    else if (i == valorDeCorte){
+        cor[0] = 255; // Vermelho completo
+        cor[1] = 255; // Verde completo
+        cor[2] = 0;   // Sem azul (amarelo)
+    }
 }
 
-void selecionaQualidade(){
-  opcao = QUALIDADE;
-  dadoAtual = dadosUfes.qualidade;
-  dadoExt = dadosSPaulo.qualidade;
-  dadoExt2 = dadosBrasilia.temp;
+void corQualidade(int i){
+    cor[0] = map(i, 0, 5, 255, 0); // vermelho
+    cor[1] = map(i, 0, 5, 0, 255); // verde
+    cor[2] = 0;
 }
 
-void atualizaDados(){
-    if (opcao == TEMPERATURA){
+// comentar
+void selecionaTemp()
+{
+    opcao = TEMPERATURA;
+    dadoAtual = dadosUfes.temp;
+    dadoExt = dadosSPaulo.temp;
+    dadoExt2 = dadosBrasilia.temp;
+}
+
+void selecionaUmidade()
+{
+    opcao = UMIDADE;
+    dadoAtual = dadosUfes.umidade;
+    dadoExt = dadosSPaulo.umidade;
+    dadoExt2 = dadosBrasilia.temp;
+}
+
+void selecionaQualidade()
+{
+    opcao = QUALIDADE;
+    dadoAtual = dadosUfes.qualidade;
+    dadoExt = dadosSPaulo.qualidade;
+    dadoExt2 = dadosBrasilia.temp;
+}
+
+void atualizaDados()
+{
+    if (opcao == TEMPERATURA)
+    {
         dadoAtual = dadosUfes.temp;
         dadoExt = dadosSPaulo.temp;
         dadoExt2 = dadosBrasilia.temp;
     }
-    else if (opcao == UMIDADE){
+    else if (opcao == UMIDADE)
+    {
         dadoAtual = dadosUfes.umidade;
         dadoExt = dadosSPaulo.umidade;
         dadoExt2 = dadosBrasilia.umidade;
     }
-    else if (opcao == QUALIDADE){
+    else if (opcao == QUALIDADE)
+    {
         dadoAtual = dadosUfes.qualidade;
         dadoExt = dadosSPaulo.qualidade;
         dadoExt2 = dadosBrasilia.qualidade;

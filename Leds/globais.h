@@ -11,7 +11,9 @@ Adafruit_NeoPixel strip6 = Adafruit_NeoPixel(NUMPIXELS, PIN6, NEO_GRB + NEO_KHZ8
 Adafruit_NeoPixel strip7 = Adafruit_NeoPixel(NUMPIXELS, PIN7, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
 Adafruit_NeoPixel strip8 = Adafruit_NeoPixel(NUMPIXELS, PIN8, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
 Adafruit_NeoPixel strip9 = Adafruit_NeoPixel(NUMPIXELS, PIN9, NEO_GRB + NEO_KHZ800);   // Cria um objeto da biblioteca NeoPixel
-Adafruit_NeoPixel strip10 = Adafruit_NeoPixel(NUMPIXELS, PIN10, NEO_GRB + NEO_KHZ800); // Cria um objeto da biblioteca NeoPixel
+Adafruit_NeoPixel strip10 = Adafruit_NeoPixel(NUM_PIXELS_TEMP, PIN10, NEO_GRB + NEO_KHZ800); // Cria um objeto da biblioteca NeoPixel
+Adafruit_NeoPixel strip11 = Adafruit_NeoPixel(NUM_PIXELS_UMID, PIN11, NEO_GRB + NEO_KHZ800); // Cria um objeto da biblioteca NeoPixel
+Adafruit_NeoPixel strip12 = Adafruit_NeoPixel(NUM_PIXELS_QUALI, PIN12, NEO_GRB + NEO_KHZ800); // Cria um objeto da biblioteca NeoPixel
 
 int cor[3];
 int backgroundColor[3];
