@@ -157,156 +157,336 @@ void loop()
  */
 void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2)
 {
-
+    //Fitas dos graidentes
     if (fita >= 10){
         if (fita == 10){
-            corTemperatura(i, 5);
+            corTemperaturaGradiente(i);
         }
 
         else if (fita == 11){
-            //corUmidade(i, 6);
-            if (i < 6){
-                cor[0] = 0;                   // Sem vermelho
-                cor[1] = map(i, 0, 5, 0, 50); // Verde suave até 50
-                cor[2] = 255;                 // Azul completo
-            }
-
-            // Para i > 6 (LEDs após o 7º: transição de vermelho para amarelo)
-            if (i > 6){
-                cor[0] = 255;                   // Vermelho completo
-                cor[1] = map(i, 7, 11, 191, 0); // Verde vai diminuindo
-                cor[2] = 0;                     // Sem azul
-            }
-
-            // Para i == 6 (LED 7: Amarelo)
-            if (i == 6){
-                cor[0] = 255; // Vermelho completo
-                cor[1] = 255; // Verde completo
-                cor[2] = 0;   // Sem azul (amarelo)
-            }
+            corUmidadeGradiente(i);
         }
 
         else if (fita == 12){
-            // corQualidade(i);
-            cor[0] = map(i, 0, 5, 255, 0); // vermelho
-            cor[1] = map(i, 0, 5, 0, 255); // verde
-            cor[2] = 0;
+            corQualidadeGradiente(i);
         }
     }
 
+    //Fitas com dados da Ufes
     else if (fita < 4){
         if (opcao == TEMPERATURA){
-            corTemperatura(dadoAtual, 30);
+            corTemperatura(dadoAtual);
         }
 
         else if (opcao == UMIDADE){
-            //corUmidade(dadoAtual, 60);
-            cor[0] = 0;
-            cor[1] = map(dadoAtual, UMDMIN, UMDMAX, 0, 255);
-            cor[2] = map(dadoAtual, UMDMIN, UMDMAX, 255, 0);
+            corUmidade(dadoAtual);
         }
 
         else if (opcao == QUALIDADE){
-            // corQualidade(dadoAtual);
-            cor[0] = map(dadoAtual, QLDMIN, QLDMAX, 0, 255);
-            cor[1] = map(dadoAtual, QLDMIN, QLDMAX, 255, 0);
-            cor[2] = 0;
+            corQualidade(dadoAtual);
         }
     }
 
+    //Fitas com dados de São Paulo
     else if (fita >= 4 && fita < 7){
         if (opcao == TEMPERATURA){
-            //corTemperatura(dadoExt, 30);
-            cor[0] = map(dadoExt, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
-            cor[1] = 0;
-            cor[2] = map(dadoExt, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
+            corTemperatura(dadoExt);
         }
 
         else if (opcao == UMIDADE){
-            //corUmidade(dadoExt, 60);
-            cor[0] = 0;
-            cor[1] = map(dadoExt, UMDMIN, UMDMAX, 0, 255);
-            cor[2] = map(dadoExt, UMDMIN, UMDMAX, 255, 0);
+            corUmidade(dadoExt);
         }
 
         else if (opcao == QUALIDADE){
-            // corQualidade(dadoExt);
-            cor[0] = map(dadoExt, QLDMIN, QLDMAX, 0, 255);
-            cor[1] = map(dadoExt, QLDMIN, QLDMAX, 255, 0);
-            cor[2] = 0;
+            corQualidade(dadoExt);
         }
     }
+
+    //Fitas com dados de Brasília
     else if (fita >= 7 && fita < 10){
         if (opcao == TEMPERATURA){
-            //corTemperatura(dadoExt2, 30);
-            cor[0] = map(dadoExt2, TEMPMIN_VIX, TEMPMAX_VIX, 0, 255);
-            cor[1] = 0;
-            cor[2] = map(dadoExt2, TEMPMIN_VIX, TEMPMAX_VIX, 255, 0);
+            corTemperatura(dadoExt2);
         }
 
         else if (opcao == UMIDADE){
-            //corUmidade(dadoExt2, 60);
-            cor[0] = 0;
-            cor[1] = map(dadoExt2, UMDMIN, UMDMAX, 0, 255);
-            cor[2] = map(dadoExt2, UMDMIN, UMDMAX, 255, 0);
+            corUmidade(dadoExt2);
         }
 
         else if (opcao == QUALIDADE){
-            // corQualidade(dadoExt2);
-            cor[0] = map(dadoExt2, QLDMIN, QLDMAX, 0, 255);
-            cor[1] = map(dadoExt2, QLDMIN, QLDMAX, 255, 0);
-            cor[2] = 0;
+            corQualidade(dadoExt2);
         }
     }
 
     fita++;
 }
 
-
-void corTemperatura(int i, int valorDeCorte){
-    if (i < valorDeCorte){
+//Define as cores do gradiente de temperatura
+void corTemperaturaGradiente(int i){
+    switch (i)
+    {
+    case 0:
         cor[0] = 0;
-        cor[1] = map(i, 0, 11, 0, 50);
-        cor[2] = 255;
-    }
+        cor[1] = 0;
+        cor[2] = 255; //Azul escuro
+    break;
+    
+    case  1:
+        cor[0] = 0;
+        cor[1] = 255;
+        cor[2] = 255; //Azul claro
+        break;
 
-    else if (i > valorDeCorte){
+    case  2:
+        cor[0] = 203;
+        cor[1] = 252;
+        cor[2] = 147; //Verde fraco
+        break;
+
+    case  3:
+        cor[0] = 242;
+        cor[1] = 248;
+        cor[2] = 72; //Amarelo
+        break;
+    
+    case 4:
         cor[0] = 255;
-        cor[1] = map(i, 11, 29, 191, 0);
-        cor[2] = 0;
+        cor[1] = 120;
+        cor[2] = 0; //Laranja fraco
+        break;
+
+    case 5:
+        cor[0] = 255;
+        cor[1] = 50;
+        cor[2] = 0; //Laranja forte
+        break;
+
+    case 6:
+        cor[0] = 255;
+        cor[1] = 0;
+        cor[2] = 0; //Vermelho
+        break;
+
+    default:
+        break;
+    }
+}
+
+//Define a cor da fita de temperatura de acordo com a faixa em que se encontra a temperatura recebida
+void corTemperatura(float temp){
+    if (temp > 20){
+        cor[0] = 0;
+        cor[1] = 0;
+        cor[2] = 255; //Azul escuro
     }
 
-    else if (i == valorDeCorte){
+    else if (temp >= 20 && temp < 23){
+        cor[0] = 0;
+        cor[1] = 255;
+        cor[2] = 255; //Azul claro
+    }
+
+    else if (temp >= 23 && temp < 26){
+        cor[0] = 203;
+        cor[1] = 252;
+        cor[2] = 147; //Verde fraco
+    }
+
+    else if (temp >= 26 && temp < 29){
+        cor[0] = 242;
+        cor[1] = 248;
+        cor[2] = 72; //Amarelo
+    }
+
+    else if (temp >= 29 && temp < 32){
+        cor[0] = 255;
+        cor[1] = 120;
+        cor[2] = 0; //Laranja fraco
+    }
+
+    else if (temp >= 32 && temp < 35){
+        cor[0] = 255;
+        cor[1] = 50;
+        cor[2] = 0; //Laranja forte
+    }
+
+    else if (temp >= 35){
+        cor[0] = 255;
+        cor[1] = 0;
+        cor[2] = 0; //Vermelho
+    }
+}
+
+//Define a cor da fita de umidade do ar de acordo com a faixa em que se encontra a umidade recebida
+void corUmidadeGradiente(int i){
+    switch (i)
+    {
+    case 0:
+        cor[0] = 255;
+        cor[1] = 0;
+        cor[2] = 0; //Vermelho
+    break;
+    
+    case  1:
+        cor[0] = 255;
+        cor[1] = 120;
+        cor[2] = 0; //Laranja fraco
+        break;
+
+    case  2:
         cor[0] = 255;
         cor[1] = 255;
-        cor[2] = 0; // Amarelo
+        cor[2] = 0; //Amarelo
+        break;
+
+    case  3:
+        cor[0] = 100;
+        cor[1] = 255;
+        cor[2] = 0; //Verde
+        break;
+    
+    case 4:
+        cor[0] = 0;
+        cor[1] = 255;
+        cor[2] = 255; //Azul claro
+        break;
+
+    case 5:
+        cor[0] = 0;
+        cor[1] = 0;
+        cor[2] = 255; //Azul escuro
+        break;
+
+    case 6:
+        cor[0] = 150;
+        cor[1] = 0;
+        cor[2] = 255; //Roxo
+        break;
+
+    default:
+        break;
     }
 }
 
-void corUmidade(int i, int valorDeCorte){
-    if (i < valorDeCorte){
-        cor[0] = 0;                   // Sem vermelho
-        cor[1] = map(i, 0, 5, 0, 50); // Verde suave até 50
-        cor[2] = 255;                 // Azul completo
+void corUmidade(float umidade){
+    if (umidade < 20){
+        cor[0] = 255;
+        cor[1] = 0;
+        cor[2] = 0; //Vermelho
     }
 
-    else if (i > valorDeCorte){
-        cor[0] = 255;                   // Vermelho completo
-        cor[1] = map(i, 7, 11, 191, 0); // Verde vai diminuindo
-        cor[2] = 0;                     // Sem azul
+    else if (umidade >= 20 && umidade < 32){
+        cor[0] = 255;
+        cor[1] = 120;
+        cor[2] = 0; //Laranja fraco
     }
 
-    else if (i == valorDeCorte){
-        cor[0] = 255; // Vermelho completo
-        cor[1] = 255; // Verde completo
-        cor[2] = 0;   // Sem azul (amarelo)
+    else if (umidade >= 32 && umidade < 44){
+        cor[0] = 255;
+        cor[1] = 255;
+        cor[2] = 0; //Amarelo
+    }
+
+    else if (umidade >= 44 && umidade < 56){
+        cor[0] = 100;
+        cor[1] = 255;
+        cor[2] = 0; //Verde
+    }
+
+    else if (umidade >= 56 && umidade < 68){
+        cor[0] = 0;
+        cor[1] = 255;
+        cor[2] = 255; //Azul claro
+    }
+
+    else if (umidade >= 68 && umidade < 80){
+        cor[0] = 0;
+        cor[1] = 0;
+        cor[2] = 255; //Azul escuro
+    }
+
+    else if (umidade > 80){
+        cor[0] = 150;
+        cor[1] = 0;
+        cor[2] = 255; //Roxo
     }
 }
 
-void corQualidade(int i){
-    cor[0] = map(i, 0, 5, 255, 0); // vermelho
-    cor[1] = map(i, 0, 5, 0, 255); // verde
-    cor[2] = 0;
+//Define as cores do gradiente de qualidade do ar
+void corQualidadeGradiente(int i){
+    switch (i)
+    {
+    case 0:
+        cor[0] = 0;
+        cor[1] = 0;
+        cor[2] = 255; //Azul escuro
+    break;
+    
+    case  1:
+        cor[0] = 0;
+        cor[1] = 255;
+        cor[2] = 0; //Verde
+        break;
+    
+    case 2:
+        cor[0] = 255;
+        cor[1] = 50;
+        cor[2] = 0; //Laranja
+        break;
+
+    case 3:
+        cor[0] = 255;
+        cor[1] = 0;
+        cor[2] = 0; //Vermelho
+        break;
+
+    case 4:
+        cor[0] = 255;
+        cor[1] = 0;
+        cor[2] = 255; //Roxo
+        break;
+
+    default:
+        break;
+    }
+}
+
+//Define a cor da fita de qualidade do ar de acordo com o valor de qualidade recebido
+void corQualidade(int qualidade){
+    switch (i)
+    {
+    case 1:
+        cor[0] = 0;
+        cor[1] = 0;
+        cor[2] = 255; //Azul escuro
+    break;
+    
+    case 2:
+        cor[0] = 0;
+        cor[1] = 255;
+        cor[2] = 0; //Verde
+        break;
+    
+    case 3:
+        cor[0] = 255;
+        cor[1] = 50;
+        cor[2] = 0; //Laranja
+        break;
+
+    case 4:
+        cor[0] = 255;
+        cor[1] = 0;
+        cor[2] = 0; //Vermelho
+        break;
+
+    case 5:
+        cor[0] = 255;
+        cor[1] = 0;
+        cor[2] = 255; //Roxo
+        break;
+
+    default:
+        break;
+    }
 }
 
 // comentar
