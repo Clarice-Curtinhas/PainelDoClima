@@ -56,7 +56,6 @@ void loop()
 
             if (local[6] == 'U')
             {
-                Serial.print("teste");
                 dadosUfes.temp = temp.toFloat();
                 dadosUfes.umidade = umidade.toFloat();
                 dadosUfes.qualidade = qualidade.toFloat();
@@ -78,7 +77,7 @@ void loop()
             }
         }
     }
-    dadosUfes.temp = 25.0;
+    /*dadosUfes.temp = 25.0;
     dadosUfes.umidade = 50.0;
     dadosUfes.qualidade = 1.0;
     dadosSPaulo.temp = 15.0;
@@ -86,7 +85,7 @@ void loop()
     dadosSPaulo.qualidade = 3.0;
     dadosBrasilia.temp = 40.0;
     dadosBrasilia.qualidade = 5.0;
-    dadosBrasilia.umidade = 100.0;
+    dadosBrasilia.umidade = 100.0;*/
     atualizaDados();
 
     int i;
@@ -183,7 +182,7 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2)
         }
 
         else if (opcao == QUALIDADE){
-            corQualidade(dadoAtual);
+            corQualidade((int)dadoAtual);
         }
     }
 
@@ -198,7 +197,7 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2)
         }
 
         else if (opcao == QUALIDADE){
-            corQualidade(dadoExt);
+            corQualidade((int)dadoExt);
         }
     }
 
@@ -213,7 +212,7 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2)
         }
 
         else if (opcao == QUALIDADE){
-            corQualidade(dadoExt2);
+            corQualidade((int)dadoExt2);
         }
     }
 
@@ -273,7 +272,7 @@ void corTemperaturaGradiente(int i){
 
 //Define a cor da fita de temperatura de acordo com a faixa em que se encontra a temperatura recebida
 void corTemperatura(float temp){
-    if (temp > 20){
+    if (temp < 20){
         cor[0] = 0;
         cor[1] = 0;
         cor[2] = 255; //Azul escuro

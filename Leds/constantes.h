@@ -23,12 +23,12 @@
 #define NUM_PIXELS_UMID 7
 #define NUM_PIXELS_QUALI 5
 
-#define TEMPMIN_VIX 15
+#define TEMPMIN_VIX 16
 #define TEMPMAX_VIX 40
-#define UMDMIN 0
+#define UMDMIN 10
 #define UMDMAX 100
-#define QLDMIN 0
-#define QLDMAX 100
+#define QLDMIN 1.0
+#define QLDMAX 5.0
 
 #define MENOR -1
 #define MAIOR 1
