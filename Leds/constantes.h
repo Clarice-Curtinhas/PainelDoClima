@@ -15,8 +15,8 @@
 
 //Fita gradiente de cores (referência)
 #define PIN10 13 // Pino de dados da fita 10
-#define PIN11 14 // Pino de dados da fita 11
-#define PIN12 15 // Pino de dados da fita 12
+#define PIN11 22 // Pino de dados da fita 11
+#define PIN12 24 // Pino de dados da fita 12
 
 #define NUMPIXELS 30 // Número de LEDs no strip
 #define NUM_PIXELS_TEMP 7

@@ -37,9 +37,9 @@ void setup()
     pinMode(2, INPUT_PULLUP);
     pinMode(3, INPUT_PULLUP);
     pinMode(21, INPUT_PULLUP);
-    attachInterrupt(0, selecionaTemp, FALLING);
-    attachInterrupt(1, selecionaUmidade, FALLING);
-    attachInterrupt(2, selecionaQualidade, FALLING);
+    attachInterrupt(0, selecionaUmidade, FALLING);
+    attachInterrupt(1, selecionaQualidade, FALLING);
+    attachInterrupt(2, selecionaTemp, FALLING);
 }
 
 void loop()
@@ -78,15 +78,15 @@ void loop()
             }
         }
     }
-    /*dadosUfes.temp = 25.0;
+    dadosUfes.temp = 25.0;
     dadosUfes.umidade = 50.0;
-    dadosUfes.qualidade = 80.0;
+    dadosUfes.qualidade = 1.0;
     dadosSPaulo.temp = 15.0;
     dadosSPaulo.umidade = 0.0;
-    dadosSPaulo.qualidade = 0.0;
+    dadosSPaulo.qualidade = 3.0;
     dadosBrasilia.temp = 40.0;
-    dadosBrasilia.qualidade = 100.0;
-    dadosBrasilia.umidade = 100.0;*/
+    dadosBrasilia.qualidade = 5.0;
+    dadosBrasilia.umidade = 100.0;
     atualizaDados();
 
     int i;
@@ -160,7 +160,7 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2)
     //Fitas dos graidentes
     if (fita >= 10){
         if (fita == 10){
-            corTemperaturaGradiente(i);
+            corQualidadeGradiente(i);
         }
 
         else if (fita == 11){
@@ -168,7 +168,7 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2)
         }
 
         else if (fita == 12){
-            corQualidadeGradiente(i);
+            corTemperaturaGradiente(i);
         }
     }
 
@@ -217,7 +217,7 @@ void defineCor(int i, float dadoAtual, float dadoExt, float dadoExt2)
         }
     }
 
-    fita++;
+  fita++;
 }
 
 //Define as cores do gradiente de temperatura
@@ -357,7 +357,7 @@ void corUmidadeGradiente(int i){
         break;
 
     case 6:
-        cor[0] = 150;
+        cor[0] = 255;
         cor[1] = 0;
         cor[2] = 255; //Roxo
         break;
@@ -452,7 +452,7 @@ void corQualidadeGradiente(int i){
 
 //Define a cor da fita de qualidade do ar de acordo com o valor de qualidade recebido
 void corQualidade(int qualidade){
-    switch (i)
+    switch (qualidade)
     {
     case 1:
         cor[0] = 0;
