@@ -38,8 +38,9 @@ void setup()
     pinMode(3, INPUT_PULLUP);
     pinMode(21, INPUT_PULLUP);
     attachInterrupt(0, selecionaUmidade, FALLING);
-    attachInterrupt(1, selecionaQualidade, FALLING);
-    attachInterrupt(2, selecionaTemp, FALLING);
+    attachInterrupt(1, selecionaTemp, FALLING);
+    attachInterrupt(2, selecionaQualidade, FALLING);
+    
 }
 
 void loop()
