@@ -30,7 +30,7 @@ A ideia é criar algo similar ao projeto "Respiramos", instalada na Praça Adolp
 * ESP8266
 * 3 Botões
 * Placa de circuito impresso
-* 2 Protoboards
+* Protoboard
 * Jumpers
 
 ## Resultado
