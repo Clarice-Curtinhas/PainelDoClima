@@ -34,7 +34,7 @@ A ideia é criar algo similar ao projeto "Respiramos", instalada na Praça Adolp
 * Jumpers
 
 ## Resultado
-Video mostrando o resultado: [resultado]()
+Video mostrando o resultado: [resultado](https://www.youtube.com/watch?v=eceHui0WBns)
 
 ## Alunos
 * Ana Luisa Casotti
